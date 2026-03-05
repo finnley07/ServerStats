@@ -1,12 +1,12 @@
 package de.finnley07.serverstats.api.controller;
 
 import com.google.gson.Gson;
-import de.finnley07.serverstats.Main;
 import de.finnley07.serverstats.api.ApiController;
 import de.finnley07.serverstats.api.dto.HealthResponse;
 import de.finnley07.serverstats.api.dto.ServerInfoResponse;
 import de.finnley07.serverstats.api.dto.StatusResponse;
 import de.finnley07.serverstats.config.PluginConfig;
+import de.finnley07.serverstats.service.ServerInfoCache;
 import de.finnley07.serverstats.service.ServiceRegistry;
 import spark.Spark;
 
@@ -17,12 +17,10 @@ import spark.Spark;
 public class ServerController implements ApiController {
 
     private final ServiceRegistry services;
-    private final PluginConfig config;
     private final Gson gson;
 
     public ServerController(ServiceRegistry services, PluginConfig config, Gson gson) {
         this.services = services;
-        this.config = config;
         this.gson = gson;
     }
 
@@ -40,11 +38,11 @@ public class ServerController implements ApiController {
 
         Spark.get("/api/info", (req, res) -> {
             res.type("application/json");
-            Main plugin = Main.getInstance();
+            ServerInfoCache cache = services.getServerInfoCache();
             return gson.toJson(new ServerInfoResponse(
-                    plugin.getServer().getOnlinePlayers().size(),
-                    plugin.getServer().getMaxPlayers(),
-                    plugin.getServer().getMotd()
+                    cache.getOnlinePlayers(),
+                    cache.getMaxPlayers(),
+                    cache.getMotd()
             ));
         });
 
@@ -54,6 +52,8 @@ public class ServerController implements ApiController {
         });
     }
 }
+
+
 
 
 

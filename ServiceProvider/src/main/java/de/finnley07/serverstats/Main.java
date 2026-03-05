@@ -26,6 +26,8 @@ public final class Main extends JavaPlugin {
         apiServer = new APIServer(pluginConfig, serviceRegistry);
         apiServer.start();
 
+        serviceRegistry.startCacheRefresh(this);
+
         registerListeners();
         registerCommands();
 

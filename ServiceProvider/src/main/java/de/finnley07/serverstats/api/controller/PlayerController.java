@@ -1,7 +1,6 @@
 package de.finnley07.serverstats.api.controller;
 
 import com.google.gson.Gson;
-import de.finnley07.serverstats.Main;
 import de.finnley07.serverstats.api.ApiController;
 import de.finnley07.serverstats.api.dto.PlayerCountResponse;
 import de.finnley07.serverstats.api.dto.PlayersResponse;
@@ -33,11 +32,13 @@ public class PlayerController implements ApiController {
             res.type("application/json");
             return gson.toJson(new PlayerCountResponse(
                     services.getPlayerService().getOnlinePlayerCount(),
-                    Main.getInstance().getServer().getMaxPlayers()
+                    services.getServerInfoCache().getMaxPlayers()
             ));
         });
     }
 }
+
+
 
 
 

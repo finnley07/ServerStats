@@ -1,15 +1,17 @@
 package de.finnley07.serverstats.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * Thread-safe player service.
+ */
 public class PlayerService {
-    private final List<String> onlinePlayers = new ArrayList<>();
+
+    private final CopyOnWriteArrayList<String> onlinePlayers = new CopyOnWriteArrayList<>();
 
     public void addPlayer(String playerName) {
-        if (!onlinePlayers.contains(playerName)) {
-            onlinePlayers.add(playerName);
-        }
+        onlinePlayers.addIfAbsent(playerName);
     }
 
     public void removePlayer(String playerName) {
@@ -17,7 +19,7 @@ public class PlayerService {
     }
 
     public List<String> getOnlinePlayers() {
-        return new ArrayList<>(onlinePlayers);
+        return List.copyOf(onlinePlayers);
     }
 
     public int getOnlinePlayerCount() {
@@ -32,3 +34,4 @@ public class PlayerService {
         onlinePlayers.clear();
     }
 }
+
