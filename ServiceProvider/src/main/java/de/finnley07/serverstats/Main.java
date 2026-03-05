@@ -2,12 +2,15 @@ package de.finnley07.serverstats;
 
 import de.finnley07.serverstats.api.APIServer;
 import de.finnley07.serverstats.listener.PlayerListener;
+import de.finnley07.serverstats.service.PlayerService;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Main extends JavaPlugin {
+
     private APIServer apiServer;
+    private PlayerService playerService;
     private static Main instance;
 
     @Override
@@ -15,11 +18,14 @@ public final class Main extends JavaPlugin {
         instance = this;
         saveDefaultConfig();
 
-        apiServer = new APIServer(this);
+        // Single PlayerService instance shared across the whole plugin
+        playerService = new PlayerService();
+
+        apiServer = new APIServer(this, playerService);
         apiServer.start();
 
-        registerListener();
-        registerCommand();
+        registerListeners();
+        registerCommands();
 
         getLogger().info("ServerStats: ServiceProvider enabled");
     }
@@ -32,13 +38,13 @@ public final class Main extends JavaPlugin {
         getLogger().info("ServerStats: ServiceProvider disabled");
     }
 
-    private void registerCommand() {
-
+    private void registerCommands() {
+        // register commands here
     }
 
-    private void registerListener() {
+    private void registerListeners() {
         PluginManager pluginManager = Bukkit.getPluginManager();
-        pluginManager.registerEvents(new PlayerListener(), this);
+        pluginManager.registerEvents(new PlayerListener(playerService), this);
     }
 
     public boolean isIPAllowed(String ip) {
@@ -51,6 +57,10 @@ public final class Main extends JavaPlugin {
 
     public boolean isCORSEnabled() {
         return getConfig().getBoolean("cors.enabled", true);
+    }
+
+    public PlayerService getPlayerService() {
+        return playerService;
     }
 
     public static Main getInstance() {

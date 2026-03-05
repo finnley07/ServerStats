@@ -1,24 +1,27 @@
 package de.finnley07.serverstats.api;
 
+import com.google.gson.Gson;
 import de.finnley07.serverstats.Main;
+import de.finnley07.serverstats.api.controller.PlayerController;
+import de.finnley07.serverstats.api.controller.ServerController;
 import de.finnley07.serverstats.service.PlayerService;
 import spark.Spark;
 
 public class APIServer {
-    private Main plugin;
-    private PlayerService playerService;
-    private APIRoutes apiRoutes;
 
-    public APIServer(Main plugin) {
+    private final Main plugin;
+    private final PlayerService playerService;
+    private final Gson gson = new Gson();
+
+    public APIServer(Main plugin, PlayerService playerService) {
         this.plugin = plugin;
-        this.playerService = new PlayerService();
-        this.apiRoutes = new APIRoutes(playerService, plugin);
+        this.playerService = playerService;
     }
 
     public void start() {
         Spark.port(plugin.getAPIPort());
 
-        // IP Whitelist Filter
+        // ── Global before-filter: IP whitelist + CORS ────────────────────────
         Spark.before((request, response) -> {
             String clientIP = request.ip();
 
@@ -26,7 +29,6 @@ public class APIServer {
                 Spark.halt(403, "IP " + clientIP + " not allowed");
             }
 
-            // CORS wenn aktiviert
             if (plugin.isCORSEnabled()) {
                 response.header("Access-Control-Allow-Origin", "*");
                 response.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -34,7 +36,11 @@ public class APIServer {
             }
         });
 
-        apiRoutes.registerRoutes();
+        // ── Register controllers ─────────────────────────────────────────────
+        new ApiRouter()
+                .register(new ServerController(playerService, plugin, gson))
+                .register(new PlayerController(playerService, plugin, gson))
+                .registerAll();
 
         plugin.getLogger().info("ServiceProvider started listening on port: " + plugin.getAPIPort());
     }
@@ -43,3 +49,5 @@ public class APIServer {
         Spark.stop();
     }
 }
+
+

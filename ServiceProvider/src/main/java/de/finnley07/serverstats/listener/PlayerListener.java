@@ -7,21 +7,21 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerListener implements Listener {
-    private static PlayerService playerService = new PlayerService();
+
+    private final PlayerService playerService;
+
+    public PlayerListener(PlayerService playerService) {
+        this.playerService = playerService;
+    }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        String playerName = event.getPlayer().getName();
-        playerService.addPlayer(playerName);
+        playerService.addPlayer(event.getPlayer().getName());
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        String playerName = event.getPlayer().getName();
-        playerService.removePlayer(playerName);
-    }
-
-    public static PlayerService getPlayerService() {
-        return playerService;
+        playerService.removePlayer(event.getPlayer().getName());
     }
 }
+
