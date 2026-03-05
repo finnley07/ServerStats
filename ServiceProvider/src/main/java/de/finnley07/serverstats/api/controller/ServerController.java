@@ -6,7 +6,8 @@ import de.finnley07.serverstats.api.ApiController;
 import de.finnley07.serverstats.api.dto.HealthResponse;
 import de.finnley07.serverstats.api.dto.ServerInfoResponse;
 import de.finnley07.serverstats.api.dto.StatusResponse;
-import de.finnley07.serverstats.service.PlayerService;
+import de.finnley07.serverstats.config.PluginConfig;
+import de.finnley07.serverstats.service.ServiceRegistry;
 import spark.Spark;
 
 /**
@@ -15,33 +16,31 @@ import spark.Spark;
  */
 public class ServerController implements ApiController {
 
-    private final PlayerService playerService;
-    private final Main plugin;
+    private final ServiceRegistry services;
+    private final PluginConfig config;
     private final Gson gson;
 
-    public ServerController(PlayerService playerService, Main plugin, Gson gson) {
-        this.playerService = playerService;
-        this.plugin = plugin;
+    public ServerController(ServiceRegistry services, PluginConfig config, Gson gson) {
+        this.services = services;
+        this.config = config;
         this.gson = gson;
     }
 
     @Override
     public void registerRoutes() {
-        // GET / – root info
         Spark.get("/", (req, res) -> {
             res.type("application/json");
-            return gson.toJson(new StatusResponse("API is running", playerService.getOnlinePlayerCount()));
+            return gson.toJson(new StatusResponse("API is running", services.getPlayerService().getOnlinePlayerCount()));
         });
 
-        // GET /api/status – quick status check
         Spark.get("/api/status", (req, res) -> {
             res.type("application/json");
-            return gson.toJson(new StatusResponse("online", playerService.getOnlinePlayerCount()));
+            return gson.toJson(new StatusResponse("online", services.getPlayerService().getOnlinePlayerCount()));
         });
 
-        // GET /api/info – detailed server info
         Spark.get("/api/info", (req, res) -> {
             res.type("application/json");
+            Main plugin = Main.getInstance();
             return gson.toJson(new ServerInfoResponse(
                     plugin.getServer().getOnlinePlayers().size(),
                     plugin.getServer().getMaxPlayers(),
@@ -49,12 +48,13 @@ public class ServerController implements ApiController {
             ));
         });
 
-        // GET /api/health – health-check endpoint
         Spark.get("/api/health", (req, res) -> {
             res.type("application/json");
             return gson.toJson(new HealthResponse("healthy", System.currentTimeMillis()));
         });
     }
 }
+
+
 
 

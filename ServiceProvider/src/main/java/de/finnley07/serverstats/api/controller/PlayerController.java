@@ -5,7 +5,7 @@ import de.finnley07.serverstats.Main;
 import de.finnley07.serverstats.api.ApiController;
 import de.finnley07.serverstats.api.dto.PlayerCountResponse;
 import de.finnley07.serverstats.api.dto.PlayersResponse;
-import de.finnley07.serverstats.service.PlayerService;
+import de.finnley07.serverstats.service.ServiceRegistry;
 import spark.Spark;
 
 /**
@@ -14,34 +14,32 @@ import spark.Spark;
  */
 public class PlayerController implements ApiController {
 
-    private final PlayerService playerService;
-    private final Main plugin;
+    private final ServiceRegistry services;
     private final Gson gson;
 
-    public PlayerController(PlayerService playerService, Main plugin, Gson gson) {
-        this.playerService = playerService;
-        this.plugin = plugin;
+    public PlayerController(ServiceRegistry services, Gson gson) {
+        this.services = services;
         this.gson = gson;
     }
 
     @Override
     public void registerRoutes() {
-        // GET /api/players – list of online players
         Spark.get("/api/players", (req, res) -> {
             res.type("application/json");
-            return gson.toJson(new PlayersResponse(playerService.getOnlinePlayers()));
+            return gson.toJson(new PlayersResponse(services.getPlayerService().getOnlinePlayers()));
         });
 
-        // GET /api/playercount – current online / max count
         Spark.get("/api/playercount", (req, res) -> {
             res.type("application/json");
             return gson.toJson(new PlayerCountResponse(
-                    playerService.getOnlinePlayerCount(),
-                    plugin.getServer().getMaxPlayers()
+                    services.getPlayerService().getOnlinePlayerCount(),
+                    Main.getInstance().getServer().getMaxPlayers()
             ));
         });
     }
 }
+
+
 
 
 

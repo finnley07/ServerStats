@@ -1,27 +1,29 @@
 package de.finnley07.serverstats;
 
 import de.finnley07.serverstats.api.APIServer;
+import de.finnley07.serverstats.config.PluginConfig;
 import de.finnley07.serverstats.listener.PlayerListener;
-import de.finnley07.serverstats.service.PlayerService;
+import de.finnley07.serverstats.service.ServiceRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Main extends JavaPlugin {
 
-    private APIServer apiServer;
-    private PlayerService playerService;
     private static Main instance;
+
+    private PluginConfig pluginConfig;
+    private ServiceRegistry serviceRegistry;
+    private APIServer apiServer;
 
     @Override
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
 
-        // Single PlayerService instance shared across the whole plugin
-        playerService = new PlayerService();
-
-        apiServer = new APIServer(this, playerService);
+        pluginConfig = new PluginConfig(this);
+        serviceRegistry = new ServiceRegistry();
+        apiServer = new APIServer(pluginConfig, serviceRegistry);
         apiServer.start();
 
         registerListeners();
@@ -44,27 +46,20 @@ public final class Main extends JavaPlugin {
 
     private void registerListeners() {
         PluginManager pluginManager = Bukkit.getPluginManager();
-        pluginManager.registerEvents(new PlayerListener(playerService), this);
+        pluginManager.registerEvents(new PlayerListener(serviceRegistry.getPlayerService()), this);
     }
 
-    public boolean isIPAllowed(String ip) {
-        return getConfig().getStringList("allowed-ips").contains(ip);
+    public PluginConfig getPluginConfig() {
+        return pluginConfig;
     }
 
-    public int getAPIPort() {
-        return getConfig().getInt("api-port", 8080);
-    }
-
-    public boolean isCORSEnabled() {
-        return getConfig().getBoolean("cors.enabled", true);
-    }
-
-    public PlayerService getPlayerService() {
-        return playerService;
+    public ServiceRegistry getServiceRegistry() {
+        return serviceRegistry;
     }
 
     public static Main getInstance() {
         return instance;
     }
-
 }
+
+

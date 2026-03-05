@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerService {
-    private static List<String> onlinePlayers = new ArrayList<>();
+    private final List<String> onlinePlayers = new ArrayList<>();
 
     public void addPlayer(String playerName) {
         if (!onlinePlayers.contains(playerName)) {
