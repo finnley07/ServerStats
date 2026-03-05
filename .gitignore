@@ -1,0 +1,104 @@
+# =====================
+# Java/Maven
+# =====================
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Gradle (if used)
+.gradle/
+build/
+
+# Java compilation
+*.class
+*.log
+hs_err_pid*
+replay_pid*
+
+# =====================
+# Vue.js
+# =====================
+# Node modules
+**/node_modules/
+
+# Build outputs
+**/dist/
+**/dist-*/
+/build/
+
+# Vue CLI
+/public/index.html
+
+# Vite
+**/.vite/
+**/vite.config.js.timestamp-*
+**/vite.config.ts.timestamp-*
+
+# Environment variables
+**/.env.local
+**/.env.*.local
+.env.*
+
+# =====================
+# Development Environments
+# =====================
+# IDEs
+**/.idea/
+**/.vscode/
+*.iml
+*.iws
+*.project
+*.classpath
+.settings/
+.target/
+
+# Editors
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# =====================
+# Testing and Coverage
+# =====================
+**/coverage/
+**/jest/
+**/.jest/
+*.lcov
+
+# =====================
+# Logs and Temp Files
+# =====================
+**/logs/
+*.log
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# =====================
+# Operating Systems
+# =====================
+# Mac OS
+.DS_Store
+
+# Windows
+Thumbs.db

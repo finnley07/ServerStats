@@ -1,0 +1,133 @@
+:root {
+  /* Light Theme Colors */
+  --primary-color: #3b82f6;
+  --primary-color-dark: #2563eb;
+  --secondary-color: #64748b;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --danger-color: #ef4444;
+  --info-color: #0ea5e9;
+
+  --background-color: #ffffff;
+  --surface-color: #f8fafc;
+  --surface-color-dark: #f1f5f9;
+  --text-color: #1e293b;
+  --text-color-secondary: #64748b;
+  --border-color: #e2e8f0;
+
+  --card-background: #ffffff;
+  --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+
+  --status-online: #10b981;
+  --status-offline: #ef4444;
+  --status-unknown: #f59e0b;
+  --status-healthy: #10b981;
+  --status-unhealthy: #f59e0b;
+}
+
+/* Dark Theme */
+[data-theme='dark'] {
+  --primary-color: #60a5fa;
+  --primary-color-dark: #3b82f6;
+  --secondary-color: #94a3b8;
+  --success-color: #34d399;
+  --warning-color: #fbbf24;
+  --danger-color: #f87171;
+  --info-color: #38bdf8;
+
+  --background-color: #0f172a;
+  --surface-color: #1e293b;
+  --surface-color-dark: #334155;
+  --text-color: #f1f5f9;
+  --text-color-secondary: #cbd5e1;
+  --border-color: #334155;
+
+  --card-background: #1e293b;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+
+  --status-online: #34d399;
+  --status-offline: #f87171;
+  --status-unknown: #fbbf24;
+  --status-healthy: #34d399;
+  --status-unhealthy: #fbbf24;
+}
+
+/* Light Theme */
+[data-theme='light'] {
+  --primary-color: #3b82f6;
+  --primary-color-dark: #2563eb;
+  --secondary-color: #64748b;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --danger-color: #ef4444;
+  --info-color: #0ea5e9;
+
+  --background-color: #ffffff;
+  --surface-color: #f8fafc;
+  --surface-color-dark: #f1f5f9;
+  --text-color: #1e293b;
+  --text-color-secondary: #64748b;
+  --border-color: #e2e8f0;
+
+  --card-background: #ffffff;
+  --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+
+  --status-online: #10b981;
+  --status-offline: #ef4444;
+  --status-unknown: #f59e0b;
+  --status-healthy: #10b981;
+  --status-unhealthy: #f59e0b;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.text-success {
+  color: var(--success-color);
+}
+
+.text-warning {
+  color: var(--warning-color);
+}
+
+.text-danger {
+  color: var(--danger-color);
+}
+
+.text-info {
+  color: var(--info-color);
+}
+
+.bg-success {
+  background-color: var(--success-color);
+}
+
+.bg-warning {
+  background-color: var(--warning-color);
+}
+
+.bg-danger {
+  background-color: var(--danger-color);
+}
+
+.bg-info {
+  background-color: var(--info-color);
+}

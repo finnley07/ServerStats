@@ -1,0 +1,48 @@
+name: Build Website
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "Website/**"
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "Website/**"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: Website/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: Website
+
+      - name: Build Vue.js project
+        run: npm run build
+        working-directory: Website
+
+      - name: Create ZIP package
+        run: |
+          cd Website/dist
+          zip -r ../../serverstats-web.zip .
+        
+      - name: Upload Website artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: serverstats-web
+          path: Website/dist/
+          retention-days: 5
+          if-no-files-found: error

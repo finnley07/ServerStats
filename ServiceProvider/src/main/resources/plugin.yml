@@ -1,0 +1,4 @@
+name: ServiceProvider
+version: '1.0-SNAPSHOT'
+main: de.finnley07.serverstats.Main
+api-version: '1.21'
