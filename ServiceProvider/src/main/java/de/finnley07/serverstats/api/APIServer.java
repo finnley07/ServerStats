@@ -1,45 +1,43 @@
 package de.finnley07.serverstats.api;
 
-import de.finnley07.serverstats.Main;
-import de.finnley07.serverstats.service.PlayerService;
+import com.google.gson.Gson;
+import de.finnley07.serverstats.api.controller.PlayerController;
+import de.finnley07.serverstats.api.controller.ServerController;
+import de.finnley07.serverstats.api.middleware.RequestMiddleware;
+import de.finnley07.serverstats.config.PluginConfig;
+import de.finnley07.serverstats.service.ServiceRegistry;
 import spark.Spark;
 
 public class APIServer {
-    private Main plugin;
-    private PlayerService playerService;
-    private APIRoutes apiRoutes;
 
-    public APIServer(Main plugin) {
-        this.plugin = plugin;
-        this.playerService = new PlayerService();
-        this.apiRoutes = new APIRoutes(playerService, plugin);
+    private final PluginConfig config;
+    private final ServiceRegistry services;
+    private final Gson gson = new Gson();
+
+    public APIServer(PluginConfig config, ServiceRegistry services) {
+        this.config = config;
+        this.services = services;
     }
 
     public void start() {
-        Spark.port(plugin.getAPIPort());
+        Spark.port(config.getApiPort());
 
-        // IP Whitelist Filter
-        Spark.before((request, response) -> {
-            String clientIP = request.ip();
+        new RequestMiddleware(config).register();
 
-            if (!plugin.isIPAllowed(clientIP) && !plugin.isIPAllowed("0.0.0.0")) {
-                Spark.halt(403, "IP " + clientIP + " not allowed");
-            }
+        new ApiRouter()
+                .register(new ServerController(services, config, gson))
+                .register(new PlayerController(services, gson))
+                .registerAll();
 
-            // CORS wenn aktiviert
-            if (plugin.isCORSEnabled()) {
-                response.header("Access-Control-Allow-Origin", "*");
-                response.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-                response.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-            }
-        });
-
-        apiRoutes.registerRoutes();
-
-        plugin.getLogger().info("ServiceProvider started listening on port: " + plugin.getAPIPort());
+        Spark.awaitInitialization();
     }
 
     public void stop() {
         Spark.stop();
+        Spark.awaitStop();
     }
 }
+
+
+
+
